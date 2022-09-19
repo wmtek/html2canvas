@@ -33,9 +33,9 @@ export class CounterState {
             counterIncrement.forEach((entry) => {
                 const counter = this.counters[entry.counter];
                 if (counter && entry.increment !== 0) {
-                    canReset = false;
+                    // canReset = false; // 存在元素同时拥有 increment 和 reset 的情况
                     if (!counter.length) {
-                        counter.push(1);
+                        counter.push(0); // 因为下面有增加 entry.increment，所以需要从0开始
                     }
                     counter[Math.max(0, counter.length - 1)] += entry.increment;
                 }
@@ -47,9 +47,8 @@ export class CounterState {
             counterReset.forEach((entry) => {
                 let counter = this.counters[entry.counter];
                 counterNames.push(entry.counter);
-                if (!counter) {
-                    counter = this.counters[entry.counter] = [];
-                }
+                // 只要是有 reset，就将设置到的 reset 的数组清空
+                counter = this.counters[entry.counter] = [];
                 counter.push(entry.reset);
             });
         }
